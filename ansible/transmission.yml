@@ -1,0 +1,33 @@
+---
+- name: Deploy transmission daemon server
+  hosts: rpi
+  tasks:
+    - name: Install Daemon
+      apt:
+        name: transmission-daemon
+        state: present
+        update_cache: yes
+    - name: Stop daemon, if running
+      service:
+        name: transmission-daemon
+        state: stopped
+    - name: Deactivate rpc authentication
+      lineinfile:
+        dest: /etc/transmission-daemon/settings.json
+        regexp: '^\\s*"rpc-authentication-required"'
+        line: '"rpc-authentication-required": false,'
+    - name: Set rpc hostname whitelist
+      lineinfile:
+        dest: /etc/transmission-daemon/settings.json
+        regexp: '^\\s*"rpc-host-whitelist"'
+        line: '"rpc-host-whitelist": "raspberrypi.local",'
+    - name: Set rpc ip whitelist
+      lineinfile:
+        dest: /etc/transmission-daemon/settings.json
+        regexp: '^\\s*"rpc-whitelist"'
+        line: '"rpc-whitelist": "127.0.0.1,192.168.*.*",'
+    - name: Start and enable daemon
+      service:
+        name: transmission-daemon
+        state: started
+        enabled: yes
