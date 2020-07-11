@@ -1,0 +1,69 @@
+- name: Deploy turtl service
+  hosts: rpi
+  remote_user: pi
+  tasks:
+    - name: Install deps
+      become: yes
+      apt:
+        name:
+          - nodejs
+          - postgresql
+          - python3-psycopg2
+          - git
+          - npm
+        state: present
+        update_cache: yes
+    
+    - name: Create turtl db
+      become: yes
+      become_user: postgres
+      postgresql_db:
+        name: turtl
+    
+    - name: Create turtl user with turtl db permissions
+      become: yes
+      become_user: postgres
+      postgresql_user:
+        db: turtl
+        name: turtl
+        password: {{ turtl_db_passwd }}
+        priv: "ALL"
+    
+    - name: Create turtl service user
+      become: yes
+      user:
+        name: turtl
+        shell: /usr/sbin/nologin
+        create_home: no
+        home: /srv/turtl
+        system: yes
+        state: present
+    
+    - name: Create /srv/turtl dir
+      become: yes
+      file:
+        path: /srv/turtl
+        owner: turtl
+        group: turtl
+        mode: '0755'
+    
+    - name: Checkout turtl
+      become: yes
+      become_user: turtl
+      git:
+        repo: 'https://github.com/turtl/server.git'
+        dest: /srv/turtl
+        # Latest version/revision as of 10JULY2020
+        version: b8d07d6a06d3690262a6bae2d89386f9c29b7fa9
+    
+    - name: Install turtl packages
+      become: yes
+      become_user: turtl
+      npm:
+        path: /srv/turtl
+        production: yes
+
+    - name: Set Hash Salt #TODO
+    - name: Create /srv/turtl plugins dir #TODO
+    - name: Init Database #TODO
+    - name: Install/Run/Enable Service #TODO
