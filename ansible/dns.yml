@@ -1,0 +1,49 @@
+# Based on https://pimylifeup.com/raspberry-pi-dns-server/
+- name: Deploy a basic DNS service
+  hosts: rpi
+  tasks:
+    - name: Install DNSmasq
+      apt:
+        name: dnsmasq
+        state: present
+        update_cache: yes
+    - name:
+      lineinfile: Do not forward plain names to upstream
+        dest: /etc/dnsmasq.conf
+        regexp: '^#domain-needed'
+        line: 'domain-needed'
+    - name: Do not forward local reverse-lookup queries to upstream
+      lineinfile:
+        dest: /etc/dnsmasq.conf
+        regexp: '^#bogus-priv'
+        line: 'bogus-priv'
+    - name:
+      lineinfile:
+        dest: /etc/dnsmasq.conf
+        regexp: '^#no-resolv'
+        line: 'no-resolv'
+    - name: Set upstream servers # Latency ordered from my location
+      lineinfile:
+        dest:
+        regexp: '^#server='
+        insertafter: "^#server"
+        line: '{{ item }}'
+        with_items:
+          # Resolver1.pitchile.cl
+          - '170.247.94.17'
+          # Resolver2.pitchile.cl
+          - '170.247.94.18'
+          # Verysign
+          - '192.58.128.30'
+          # Cloudflare
+          - '1.1.1.1'
+    - name: Set cache size
+      lineinfile:
+        dest:
+        regexp: '^#cache-size='
+        line: 'cache-size=1000'
+    - name: Reload service
+      service:
+        name: dnsmasq
+        state: reloaded
+        enabled: yes
