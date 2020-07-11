@@ -17,3 +17,6 @@
         section: Service
         option: PrivateMounts
         value: "no"
+    - name: Reexec Systemd daemon to reload systemd-udevd.service
+      systemd:
+        daemon_reexec: yes
