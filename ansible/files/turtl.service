@@ -1,0 +1,12 @@
+[Service]
+User=turtl
+Group=turtl
+WorkingDirectory=/srv/turtl
+ExecStart=/usr/bin/node /srv/turtl/server.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=Turtl
+ 
+[Install]
+WantedBy=multi-user.target
