@@ -1,5 +1,4 @@
----
-- name: Deploy transmission daemon server
+- name: Deploy transmission daemon service
   hosts: rpi
   tasks:
     - name: Install Daemon
