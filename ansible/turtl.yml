@@ -1,5 +1,6 @@
 - name: Deploy turtl service
   hosts: rpi
+  gather_facts: no
   become: yes
   roles:
   - kwoodson.yedit
