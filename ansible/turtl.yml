@@ -1,9 +1,10 @@
 - name: Deploy turtl service
   hosts: rpi
-  remote_user: pi
+  become: yes
+  roles:
+  - kwoodson.yedit
   tasks:
     - name: Install deps
-      become: yes
       apt:
         name:
           - nodejs
@@ -26,11 +27,10 @@
       postgresql_user:
         db: turtl
         name: turtl
-        password: {{ turtl_db_passwd }}
+        password: "{{ turtl_db_passwd }}"
         priv: "ALL"
     
     - name: Create turtl service user
-      become: yes
       user:
         name: turtl
         shell: /usr/sbin/nologin
@@ -40,7 +40,6 @@
         state: present
     
     - name: Create /srv/turtl dir
-      become: yes
       file:
         path: /srv/turtl
         owner: turtl
@@ -63,7 +62,84 @@
         path: /srv/turtl
         production: yes
 
-    - name: Set Hash Salt #TODO
-    - name: Create /srv/turtl plugins dir #TODO
-    - name: Init Database #TODO
-    - name: Install/Run/Enable Service #TODO
+    - name: Copy default config
+      become: yes
+      become_user: turtl
+      copy:
+        remote_src: yes
+        src: /srv/turtl/config/config.yaml.default
+        dest: /srv/turtl/config/config.yaml
+
+    - name: Set Hash Salt
+      become: yes
+      become_user: turtl
+      yedit:
+        src: /srv/turtl/config/config.yaml
+        key: app.secure_hash_salt
+        value: "{{ turtl_hash_salt }}"
+
+    - name: Change db connection string
+      become: yes
+      become_user: turtl
+      yedit:
+        src: /srv/turtl/config/config.yaml
+        key: db.connstr
+        value: 'postgres://turtl:{{ turtl_db_passwd|urlencode()|replace("/", "%2f") }}@127.0.0.1/turtl'
+
+    - name: Create turtl plugins dir
+      become: yes
+      become_user: turtl
+      file:
+        path: /src/turtl/plugins
+        state: directory
+
+    - name: Set plugins dir in config
+      become: yes
+      become_user: turtl
+      yedit:
+        src: /srv/turtl/config/config.yaml
+        key: plugins.plugin_location
+        value: /src/turtl/plugins
+
+    - name: Set upload dir
+      become: yes
+      become_user: turtl
+      yedit:
+        src: /srv/turtl/config/config.yaml
+        key: uploads.local
+        value: /srv/turtl/UPLOADS
+
+    - name: Set loglevel
+      become: yes
+      become_user: turtl
+      yedit:
+        src: /srv/turtl/config/config.yaml
+        key: loglevel
+        value: 'info'
+
+    - name: Set api url
+      become: yes
+      become_user: turtl
+      yedit:
+        src: /srv/turtl/config/config.yaml
+        key: app.api_url
+        value: 'http://raspberrypi.local:8181'
+
+    - name: Init Database
+      become: yes
+      become_user: turtl
+      command: node tools/create-db-schema.js
+
+    - name: Install systemd service
+      copy:
+        src: files/turtl.service
+        dest: /etc/systemd/system/
+        owner: root
+        mode: '0644'
+
+    - name: Enable and run service
+      systemd:
+        daemon_reload: yes
+        name: turtl
+        enabled: yes
+        state: started
