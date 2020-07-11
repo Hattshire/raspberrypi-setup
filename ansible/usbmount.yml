@@ -1,5 +1,7 @@
 - name: Setup usbmount
   hosts: rpi
+  gather_facts: no
+  become: true
   tasks:
     - name: Install usbmount
       apt:
@@ -7,10 +9,10 @@
         state: present
         update_cache: yes
     - name: Change vfat options
-      lineinfile:
-        dest: /etc/usbmount/usbmount.conf
-        regexp: '^FS_MOUNTOPTIONS'
-        line: 'FS_MOUNTOPTIONS="-fstype=vfat,gid=cdrom,fmask=0113,dmask=0002,utf8,codepage=850,shortname=winnt"'
+      replace:
+        path: /etc/usbmount/usbmount.conf
+        regexp: '^FS_MOUNTOPTIONS.*'
+        replace: 'FS_MOUNTOPTIONS="-fstype=vfat,gid=cdrom,fmask=0113,dmask=0002,utf8,codepage=850,shortname=winnt"'
     - name: Disable udev private mounts
       ini_file:
         dest: /etc/systemd/system/systemd-udevd.service.d/usbmount.conf
