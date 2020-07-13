@@ -69,7 +69,7 @@ cd ansible
 ansible-vault create group_vars/rpi/vault
 ```
 
-#### Run the main playbook
+#### Finally, run the main playbook
 
 ```
 cd ansible
