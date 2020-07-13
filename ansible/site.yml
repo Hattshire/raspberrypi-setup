@@ -1,0 +1,13 @@
+---
+- name: Install my Raspberry Pi services
+  hosts: rpi
+  become: yes
+  gather_facts: no
+  roles:
+  - kwoodson.yedit
+  - dns # Based on https://pimylifeup.com/raspberry-pi-dns-server/
+  - http
+  - transmission
+  - turtl
+  - usbmount
+  - zenko-cloudserver

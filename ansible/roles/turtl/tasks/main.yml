@@ -1,0 +1,151 @@
+---
+# NOTE to SELF about the vault:
+# Create ~/.ansible_rpi_vault containing the vault passwd
+# Then create the vault using `ansible-vault create turtl.vault.yml`
+# The content is no more than `key: "value"` stop gnarling on everything pls
+#  roles:
+#  - kwoodson.yedit
+- name: Install deps
+  apt:
+    name:
+      - nodejs
+      - postgresql
+      - python-psycopg2
+      - python-yaml
+      - git
+      - npm
+    state: present
+    update_cache: yes
+
+- name: Create turtl db
+  become: yes
+  become_user: postgres
+  postgresql_db:
+    name: turtl
+
+- name: Create turtl user with turtl db permissions
+  become: yes
+  become_user: postgres
+  postgresql_user:
+    db: turtl
+    name: turtl
+    password: "{{ turtl_db_passwd }}"
+    priv: "ALL"
+
+- name: Create turtl service user
+  user:
+    name: turtl
+    shell: /usr/sbin/nologin
+    create_home: no
+    home: /srv/turtl
+    system: yes
+    state: present
+
+- name: Create /srv/turtl dir
+  file:
+    path: /srv/turtl
+    state: directory
+    owner: turtl
+    group: turtl
+    mode: '0755'
+
+- name: Checkout turtl
+  become: yes
+  become_user: turtl
+  git:
+    repo: 'https://github.com/turtl/server.git'
+    dest: /srv/turtl
+    # Latest version/revision as of 10JULY2020
+    version: b8d07d6a06d3690262a6bae2d89386f9c29b7fa9
+
+- name: Install turtl packages
+  become: yes
+  become_user: turtl
+  npm:
+    path: /srv/turtl
+    production: yes
+
+- name: Copy default config if it's missing
+  become: yes
+  become_user: turtl
+  copy:
+    remote_src: yes
+    src: /srv/turtl/config/config.yaml.default
+    dest: /srv/turtl/config/config.yaml
+    force: no
+
+- name: Set Hash Salt
+  become: yes
+  become_user: turtl
+  yedit:
+    src: /srv/turtl/config/config.yaml
+    key: app.secure_hash_salt
+    value: "{{ turtl_hash_salt }}"
+
+- name: Change db connection string
+  become: yes
+  become_user: turtl
+  yedit:
+    src: /srv/turtl/config/config.yaml
+    key: db.connstr
+    value: 'postgres://turtl:{{ turtl_db_passwd|urlencode()|replace("/", "%2f") }}@127.0.0.1/turtl'
+
+- name: Create turtl plugins dir
+  become: yes
+  become_user: turtl
+  file:
+    path: /srv/turtl/plugins
+    state: directory
+
+- name: Set plugins dir in config
+  become: yes
+  become_user: turtl
+  yedit:
+    src: /srv/turtl/config/config.yaml
+    key: plugins.plugin_location
+    value: /srv/turtl/plugins
+
+- name: Set upload dir
+  become: yes
+  become_user: turtl
+  yedit:
+    src: /srv/turtl/config/config.yaml
+    key: uploads.local
+    value: /srv/turtl/UPLOADS
+
+- name: Set loglevel
+  become: yes
+  become_user: turtl
+  yedit:
+    src: /srv/turtl/config/config.yaml
+    key: loglevel
+    value: 'info'
+
+- name: Set api url
+  become: yes
+  become_user: turtl
+  yedit:
+    src: /srv/turtl/config/config.yaml
+    key: app.api_url
+    value: 'http://raspberrypi.local:8181'
+
+- name: Init Database #TODO Make it idempotent
+  become: yes
+  become_user: turtl
+  command:
+    chdir: /srv/turtl
+    cmd: node tools/create-db-schema.js
+
+- name: Install systemd service
+  copy:
+    src: files/turtl.service
+    dest: /etc/systemd/system/
+    owner: root
+    mode: '0644'
+
+- name: Enable and run service
+  systemd:
+    daemon_reload: yes
+    name: turtl
+    enabled: yes
+    state: started

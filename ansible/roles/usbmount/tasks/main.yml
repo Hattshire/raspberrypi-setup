@@ -1,0 +1,19 @@
+- name: Install usbmount
+  apt:
+    name: usbmount
+    state: present
+    update_cache: yes
+- name: Change vfat options
+  replace:
+    path: /etc/usbmount/usbmount.conf
+    regexp: '^FS_MOUNTOPTIONS.*'
+    replace: 'FS_MOUNTOPTIONS="-fstype=vfat,gid=cdrom,fmask=0113,dmask=0002,utf8,codepage=850,shortname=winnt"'
+- name: Disable udev private mounts
+  ini_file:
+    dest: /etc/systemd/system/systemd-udevd.service.d/usbmount.conf
+    section: Service
+    option: PrivateMounts
+    value: "no"
+- name: Reexec Systemd daemon to reload systemd-udevd.service
+  systemd:
+    daemon_reexec: yes

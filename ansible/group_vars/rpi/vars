@@ -1,0 +1,6 @@
+---
+mysql_user: "{{ vault_mysql_user }}"
+mysql_passwd: "{{ vault_mysql_passwd }}"
+turtl_db_passwd: "{{ vault_turtl_db_passwd }}"
+turtl_hash_salt: "{{ vault_turtl_hash_salt }}"
+
