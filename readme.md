@@ -47,6 +47,7 @@ Everything I did has an ansible playbook, so I can remake an identical system, t
 * _transmission.yml_: Transmission Torrent Daemon accesible from LAN
 * _turtl.yml_: Personal Turtl service
 * _usbmount.yml_: Automount USB drives, correctly
+* _zenko-cloudserver.yml_: S3-compatible ObjectStorage service with multicloud agregation support
 
 > UPNEXT: miniDLNA - mpd - RabbitMQ
 
@@ -79,6 +80,7 @@ ansible-playbook dns.yml
 ansible-playbook http.yml
 ansible-playbook transmission.yml
 ansible-playbook turtl.yml
+ansible-playbook zenko-cloudserver.yml
 ```
 
 _As of 11JULY2020 every playbook works as intended._

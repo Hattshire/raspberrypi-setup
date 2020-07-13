@@ -1,0 +1,60 @@
+- name: Deploy zenko cloudserver 8.2.6 service
+  hosts: rpi
+  gather_facts: no
+  become: yes
+  tasks:
+    - name: Install deps
+      apt:
+        name:
+          - nodejs
+          - yarnpkg
+        state: present
+        update_cache: yes
+
+    # TODO Find out why creating the user with `home=/srv/zenko/s3` does not respect `create_home: no` when there's no `/srv/zenko`.
+    - name: Create zenko cloudserver service user
+      user:
+        name: zenko-s3
+        shell: /usr/sbin/nologin
+        create_home: no
+        home: /srv/zenko-s3
+        system: yes
+        state: present
+
+    - name: Create /srv/zenko-s3 dir
+      file:
+        path: /srv/zenko-s3
+        state: directory
+        owner: zenko-s3
+        group: zenko-s3
+        mode: '0755'
+        
+    - name: Checkout zenko cloudserver
+      become: yes
+      become_user: zenko-s3
+      git:
+        repo: 'https://github.com/scality/cloudserver.git'
+        dest: /srv/zenko-s3
+        version: "8.2.6"
+
+    - name: Install zenko cloudserver packages
+      become: yes
+      become_user: zenko-s3
+      yarn:
+        executable: /usr/bin/yarnpkg
+        path: /srv/zenko-s3
+        production: yes
+
+    - name: Install systemd service
+      copy:
+        src: files/zenko-s3.service
+        dest: /etc/systemd/system/
+        owner: root
+        mode: '0644'
+
+    - name: Enable and run service
+      systemd:
+        daemon_reload: yes
+        name: zenko-s3
+        enabled: yes
+        state: started

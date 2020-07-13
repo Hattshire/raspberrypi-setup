@@ -1,0 +1,12 @@
+[Service]
+User=zenko-s3
+Group=zenko-s3
+WorkingDirectory=/srv/zenko-s3
+ExecStart=/usr/bin/yarnpkg start
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=Zenko CloudServer
+ 
+[Install]
+WantedBy=multi-user.target
