@@ -15,7 +15,7 @@ I'm using it as a local server, as this is the only easy to get not-that-expensi
 * The local computer has python 3 with pycrypto and ansible installed
 * SSH was configured to log in with a private key, on pi user (`ssh r..pi.local` is sufficent to be in), and pi user's password is no longer "raspberry" (Security first, even if my ISP doesn't give me any open ports to the Public :c)
 
-#### Specs/limitations (at the time of writting)
+### Specs/limitations (at the time of writting)
 ```
 Board:
   - Raspberry PI 4
@@ -38,16 +38,16 @@ Peripheals:
 
 ```
 
-#### Playbooks
+### Ansible Roles
 
-Everything I did has an ansible playbook, so I can remake an identical system, they are:
+Everything I did has an ansible role, so I can remake an identical system, they are:
 
-* _dns.yml_: DNS service with _dnsmasq_
-* _http.yml_: Simple LAMP Stack setup
-* _transmission.yml_: Transmission Torrent Daemon accesible from LAN
-* _turtl.yml_: Personal Turtl service
-* _usbmount.yml_: Automount USB drives, correctly
-* _zenko-cloudserver.yml_: S3-compatible ObjectStorage service with multicloud agregation support
+* _dns_: DNS service with _dnsmasq_
+* _http_: Simple LAMP Stack setup
+* _transmission_: Transmission Torrent Daemon accesible from LAN
+* _turtl_: Personal Turtl service
+* _usbmount_: Automount USB drives, correctly
+* _zenko-cloudserver_: S3-compatible ObjectStorage service with multicloud agregation support
 
 > UPNEXT: miniDLNA - mpd - RabbitMQ
 
