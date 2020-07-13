@@ -35,7 +35,7 @@
         # Resolver2.pitchile.cl
         - '170.247.94.18'
         # Verysign
-        - '192.58.128.30'
+        # - '192.58.128.30' (Doesn't work apparently)
         # Cloudflare
         - '1.1.1.1'
     - name: Set cache size
