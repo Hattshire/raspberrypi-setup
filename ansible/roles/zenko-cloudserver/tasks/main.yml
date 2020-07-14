@@ -101,7 +101,23 @@
         path: "/restEndpoints/raspberrypi.local"
         value: "eu-central-1"
 
-# TODO SET/GENERATE ACCESS_KEY_ID AND SECRET_ACCESS_KEY
+- name: Set auth thing
+  become: yes
+  become_user: zenko-s3
+  json_patch:
+    src: /srv/zenko-s3/conf/authdata.json
+    operations:
+      - op: replace
+        path: "/accounts"
+        value:
+          - name: "pi"
+            email: "pi@exam.pl"
+            arn: "arn:aws:iam::123456789016:root"
+            canonicalID: "http://acs.zenko.io/accounts/service/pi"
+            shortid: "123456789016"
+            keys:
+              - access: "accesskey"
+                secret: "secretkey"
 
 - name: Install systemd service
   copy:
