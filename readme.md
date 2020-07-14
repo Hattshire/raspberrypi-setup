@@ -51,9 +51,22 @@ Everything I did has an ansible role, so I can remake an identical system, they 
 
 > UPNEXT: miniDLNA - mpd - RabbitMQ
 
+### System Preparation
+
+> TODO Set wifi settings before step 2
+
+ 1. Install Raspberry Pi OS Lite x32 via "Raspi Card Imager" Android app with the "Headless" and "Enable ssh" options selected on a clean microsd card.
+ 
+ 2. Install the msd on the pi
+ 
+ 3. Connect the pi to the network with eth. and power on.
+ 
+ 3.1. (optional) Connect to wifi editing `/etc/wpa_supplicant/wpa_supplicant.conf` using ssh
+ 
+ 4. Update the system
+
 ### Setup
 
-> TODO DOCUMENT EARLY SETUP
 
 #### First, set a vault password creating the vault password file on the local home dir
 
