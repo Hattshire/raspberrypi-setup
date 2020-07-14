@@ -110,14 +110,14 @@
       - op: replace
         path: "/accounts"
         value:
-          - name: "pi"
-            email: "pi@exam.pl"
+          - name: "{{ zenko_user.name }}"
+            email: "{{ zenko_user.email }}"
             arn: "arn:aws:iam::123456789016:root"
             canonicalID: "http://acs.zenko.io/accounts/service/pi"
             shortid: "123456789016"
             keys:
-              - access: "accesskey"
-                secret: "secretkey"
+              - access: "{{ zenko_user.access_key }}"
+                secret: "{{ zenko_user.secret_key }}"
 
 - name: Install systemd service
   copy:

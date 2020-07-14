@@ -3,4 +3,8 @@ mysql_user: "{{ vault_mysql_user }}"
 mysql_passwd: "{{ vault_mysql_passwd }}"
 turtl_db_passwd: "{{ vault_turtl_db_passwd }}"
 turtl_hash_salt: "{{ vault_turtl_hash_salt }}"
-
+zenko_user:
+  name: "pi"
+  email: "pi@exam.pl"
+  access_key: pi # "{{ vault_zenko_access_key }}"
+  secret_key: "{{ vault_zenko_secret_key }}"
