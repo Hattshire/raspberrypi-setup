@@ -68,28 +68,28 @@ Everything I did has an ansible role, so I can remake an identical system, they 
 ### Setup
 
 
-#### First, set a vault password creating the vault password file on the local home dir
+ 1. First, set a vault password creating the vault password file on the local home dir
 
-```
-echo P45UWURD > ~/..ansible_rpi_vault
-```
+ ```
+ echo P45UWURD > ~/..ansible_rpi_vault
+ ```
 
-#### Recreate the vault
-> Note: variables to set are specified in the group_vars/rpi/vars file (not so clearly but at least not shady)
+ 2. Recreate the vault
+ > Note: variables to set are specified in the group_vars/rpi/vars file (not so clearly but at least not shady)
 
-```
-cd ansible
-ansible-vault create group_vars/rpi/vault
-```
+ ```
+ cd ansible
+ ansible-vault create group_vars/rpi/vault
+ ```
 
-#### Finally, run the main playbook
+ 3. Finally, run the main playbook
 
-```
-cd ansible
-ansible-playbook site.yml
-```
+ ```
+ cd ansible
+ ansible-playbook site.yml
+ ```
 
-_As of 13JULY2020 every playbook works as intended._
+_As of 14JULY2020 every playbook works as intended._
 
 ## Built With
 
