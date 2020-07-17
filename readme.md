@@ -44,12 +44,13 @@ Everything I did has an ansible role, so I can remake an identical system, they 
 
 * _dns_: DNS service with _dnsmasq_
 * _http_: Simple LAMP Stack setup
+* _RabbitMQ_: Message Broker
 * _transmission_: Transmission Torrent Daemon accesible from LAN
 * _turtl_: Personal Turtl service
 * _usbmount_: Automount USB drives, correctly
 * _zenko-cloudserver_: S3-compatible ObjectStorage service with multicloud agregation support
 
-> UPNEXT: miniDLNA - mpd - RabbitMQ
+> UPNEXT: miniDLNA - mpd
 
 ### System Preparation
 

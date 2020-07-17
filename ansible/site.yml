@@ -7,6 +7,7 @@
   - kwoodson.yedit
   - dns # Based on https://pimylifeup.com/raspberry-pi-dns-server/
   - http
+  - rabbitmq
   - transmission
   - turtl
   - usbmount
