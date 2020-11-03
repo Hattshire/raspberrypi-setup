@@ -3,7 +3,6 @@
 Some fancy things to setup my rpi, so if I fk'up the MicroSD I can get it back running without doing the boring stuff again.
 
 I'm using it as a local server, as this is the only easy to get not-that-expensive low-power thing I can use for now.
-(It costs a rough maximum of 1.6USD monthly to run at full usage 24/7, almost any other cheap linux-ready thing would cost me more than 10USD monthly to run not even at idle, and I have no money source currently, and energy here is kinda expensive, and Google is still evil, and internet things doesn't automate over magic)
 
 ## Getting Started
 
