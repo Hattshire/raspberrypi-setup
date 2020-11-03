@@ -72,7 +72,7 @@ Everything I did has an ansible role, so I can remake an identical system, they 
  1. First, set a vault password creating the vault password file on the local home dir
 
  ```
- echo P45UWURD > ~/..ansible_rpi_vault
+ echo P45UWURD > ~/.ansible_rpi_vault
  ```
 
  2. Recreate the vault
