@@ -82,8 +82,15 @@ Everything I did has an ansible role, so I can remake an identical system, they 
  cd ansible
  ansible-vault create group_vars/rpi/vault
  ```
+ 
+ 3. Install dependencies
+ 
+ ```
+ cd ansible
+ ansible-galaxy install -r requirements.yml
+ ```
 
- 3. Finally, run the main playbook
+ 4. Finally, run the main playbook
 
  ```
  cd ansible
