@@ -96,7 +96,7 @@ Everything I did has an ansible role, so I can remake an identical system, they 
  ansible-playbook site.yml
  ```
 
-_As of 14JULY2020 every playbook works as intended._
+_As of 03NOV2020 every playbook works as intended._
 
 ## Built With
 
