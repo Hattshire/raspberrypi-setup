@@ -9,10 +9,11 @@ I'm using it as a local server, as this is the only easy to get not-that-expensi
 ### Prerequisites and/or asumptions
 
 * The rpi is already connected to lan (wifi or eth, doesn't matter, for now).
-* The rpi has Raspbian/RaspberryPiOS Lite installed
+* The rpi has Raspbian/RaspberryPi OS Lite (x32) installed
 * The rpi names itself `raspberrypi`, and thus it's network address is `raspberrypi.local`
+  * If not, edit `ansible/hosts.yml`. More info [>here<](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#hosts-in-multiple-groups).
 * The local computer has python 3 with pycrypto and ansible installed
-* SSH was configured to log in with a private key, on pi user (`ssh r..pi.local` is sufficent to be in), and pi user's password is no longer "raspberry" (Security first, even if my ISP doesn't give me any open ports to the Public :c)
+* SSH was configured to log in with a [private key](https://www.ssh.com/ssh/copy-id#copy-the-key-to-a-server), on pi user (`ssh r..pi.local` is sufficent to be in), and pi user's [password is no longer "raspberry"](https://www.shellhacks.com/raspberry-pi-default-password-how-to-change/) (Security first, even if my ISP doesn't give me any open ports to the Public :c)
 
 ### Specs/limitations (at the time of writting)
 ```
