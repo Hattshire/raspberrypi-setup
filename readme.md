@@ -23,18 +23,18 @@ Board:
   - 2GB RAM
 
 MicroSD: 
-  - Sandisk 4GB class 4
+  - Kensington 64GB class 10
 
 Power:
   - 2A usb charger (that probably doesn't deliver more than 1A, but idk)
 
 Peripheals:
+  - No External Storage
   - No Display
   - No Sound
   - No Case
   - No nothing
   ...
-  - Kingston 16GB USB Stick for local storage (as I can't power the hdd I have externally for now)
 
 ```
 
