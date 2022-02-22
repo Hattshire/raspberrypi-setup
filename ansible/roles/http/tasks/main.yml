@@ -2,40 +2,47 @@
   apt:
     name:
       - apache2
-      - python-mysqldb
+      - python3-mysqldb
       - mariadb-server
-      - libapache2-mod-php7.3
-      - php7.3-mysql
+      - libapache2-mod-php7.4
+      - php7.4-mysql
     state: present
     update_cache: yes
+    
 - name: Enable php
   apache2_module:
-    name: php7.3
+    name: php7.4
     state: present
+
 - name: Enable http2
   apache2_module:
     name: http2
     state: present
+
 - name: Fix /var/www owner
   file:
     path: /var/www
     owner: www-data
     group: www-data
     recurse: yes
-- name: Secure mysql # WARNING: This will not work on MariaDB>=10.4 (mysql.user becomes RO)
-  #TODO Make it idempotent
-  command: /usr/bin/mysql -u root -e {{ item | quote }}
-  with_items:
-    # Remove anon users
-    - "DELETE FROM mysql.user WHERE User='';"
-    # Allow root only from localhost root processes
-    - "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1');"
-    - "UPDATE mysql.user SET Plugin='unix_socket' WHERE User='root';"
-    - "UPDATE mysql.user SET Password='' WHERE User='root';"
-    # Drop test db
-    - "DROP DATABASE IF EXISTS test; DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%';"
-    # Flush Permissions
-    - "FLUSH PRIVILEGES;"
+
+- name: Remove anon users
+  mysql_user:
+   name: ''
+   host_all: yes
+   state: absent
+
+- name: Root only from localhost socket
+  mysql_user:
+   name: root
+   plugin: unix_socket
+   state: present
+
+- name: Drop test db
+  mysql_db: 
+    name: test
+    state: absent
+
 - name: Create rw mysql user
   mysql_user:
     name: "{{ mysql_user }}"

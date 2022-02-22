@@ -8,14 +8,15 @@ I'm using it as a local server, as this is the only easy to get not-that-expensi
 
 ### Prerequisites and/or asumptions
 
-* The rpi is already connected to lan (wifi or eth, doesn't matter, for now).
-* The rpi has Raspbian/RaspberryPi OS Lite (x32) installed
-* The rpi names itself `raspberrypi`, and thus it's network address is `raspberrypi.local`
-  * If not, edit `ansible/hosts.yml`. More info [>here<](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#hosts-in-multiple-groups).
-* The local computer has python 3 with pycrypto and ansible installed
-* SSH was configured to log in with a [private key](https://www.ssh.com/ssh/copy-id#copy-the-key-to-a-server), on pi user (`ssh r..pi.local` is sufficent to be in), and pi user's [password is no longer "raspberry"](https://www.shellhacks.com/raspberry-pi-default-password-how-to-change/) (Security first, even if my ISP doesn't give me any open ports to the Public :c)
+* [ ] The rpi is already connected to lan (wifi or eth, doesn't matter, for now).
+* [ ] The rpi has Raspbian/RaspberryPi OS Lite (x64) installed
+* [ ] The rpi names itself `raspberrypi`, and thus it's network address is `raspberrypi.local`
+  * [ ] If not, edit `ansible/hosts.yml`. More info [>here<](https://docs.ansible.com/ansible/latest/user_guide/intro_inventory.html#hosts-in-multiple-groups).
+* [ ] The local computer has python 3 with pycrypto and ansible installed
+* [ ] SSH was configured to log in with a [private key](https://www.ssh.com/ssh/copy-id#copy-the-key-to-a-server), on pi user (`ssh pi@raspberrypi.local` is sufficent to be in), and pi user's [password is no longer "raspberry"](https://www.shellhacks.com/raspberry-pi-default-password-how-to-change/) (Security first, even if my ISP doesn't give me any open ports to the Public :c)
 
 ### Specs/limitations (at the time of writting)
+
 ```
 Board:
   - Raspberry PI 4
@@ -23,16 +24,15 @@ Board:
   - 2GB RAM
 
 MicroSD: 
-  - Kensington 64GB class 10
+  - Kensington 128GB class 10
 
 Power:
-  - 2A usb charger (that probably doesn't deliver more than 1A, but idk)
+  - 2A generic usb charger (that probably doesn't deliver more than 1A, but idk)
 
 Peripheals:
   - No External Storage
   - No Display
   - No Sound
-  - No Case
   - No nothing
   ...
 
@@ -47,64 +47,55 @@ Everything I did has an ansible role, so I can remake an identical system, they 
 * _RabbitMQ_: Message Broker
 * _transmission_: Transmission Torrent Daemon accesible from LAN
 * _turtl_: Personal Turtl service
-* _usbmount_: Automount USB drives, correctly
-* _zenko-cloudserver_: S3-compatible ObjectStorage service with multicloud agregation support
-
-> UPNEXT: miniDLNA - mpd
+* ~~_zenko-cloudserver_: S3-compatible ObjectStorage service with multicloud agregation support~~
 
 ### System Preparation
 
-> TODO Set wifi settings before step 2
-
- 1. Install Raspberry Pi OS Lite x32 via "Raspi Card Imager" Android app with the "Headless" and "Enable ssh" options selected on a clean microsd card.
- 
- 2. Install the msd on the pi
- 
- 3. Connect the pi to the network with eth. and power on.
- 
- 3.1. (optional) Connect to wifi editing `/etc/wpa_supplicant/wpa_supplicant.conf` using ssh
- 
- 4. Update the system
+1. Install Raspberry Pi OS Lite x64 on the microsd card.
+2. Enable ssh (Create a file named `/boot/ssh`)
+3. Install the microsd on the pi
+4. Connect the pi to the network using eth. and power on.
+5. Copy the ssh id (`ssh-copy-id pi@raspberrypi.local`)
+6. Change default password
+7. Update the system
 
 ### Setup
 
+1. First, set a vault password creating the vault password file on the local home dir
 
- 1. First, set a vault password creating the vault password file on the local home dir
+```
+echo P45UWURD > ~/.ansible_rpi_vault
+```
 
- ```
- echo P45UWURD > ~/.ansible_rpi_vault
- ```
+2. Recreate the vault (If password is lost or something)
 
- 2. Recreate the vault
- > Note: variables to set are specified in the group_vars/rpi/vars file (not so clearly but at least not shady)
+> Note: variables to set are specified in the group_vars/rpi/vars file (not so clearly but at least not shady)
 
- ```
- cd ansible
- ansible-vault create group_vars/rpi/vault
- ```
- 
- 3. Install dependencies
- 
- ```
- cd ansible
- ansible-galaxy install -r requirements.yml
- ```
+```
+cd ansible
+ansible-vault create group_vars/rpi/vault
+```
 
- 4. Finally, run the main playbook
+3. Install dependencies
 
- ```
- cd ansible
- ansible-playbook site.yml
- ```
+```
+cd ansible
+ansible-galaxy install -r requirements.yml
+```
 
-_As of 03NOV2020 every playbook works as intended._
+4. Finally, run the main playbook
+
+```
+cd ansible
+ansible-playbook site.yml
+```
+
+_As of 22022022 enabled playbooks works as intended._
 
 ## Built With
 
 * [Ansible](https://docs.ansible.com/) - That thing to automate things on other things that aren't the local thing but it can also be used there.
 * [luv <3](https://uwu.email/) - UwU
-
-
 
 ## Authors
 
@@ -122,6 +113,7 @@ This project is (un)licensed under the UNLicense - see the [UNLICENSE.md](UNLICE
 * My cat _Teo_ for beign so cute <3 But at the same time so traitor with my feelings :'c
 
 ## Side Notes
+
 Yes this was a template, a very good one, so good U want to use it too, here here:
 
 [PurpleBooth/README-Template.md](https://gist.github.com/PurpleBooth/109311bb0361f32d87a2)

@@ -10,8 +10,8 @@
     name:
       - nodejs
       - postgresql
-      - python-psycopg2
-      - python-yaml
+      - python3-psycopg2
+      - python3-yaml
       - git
       - npm
     state: present
@@ -36,8 +36,8 @@
   user:
     name: turtl
     shell: /usr/sbin/nologin
-    create_home: no
-    home: /srv/turtl
+    create_home: yes
+    home: /var/turtl
     system: yes
     state: present
 
@@ -55,12 +55,14 @@
   git:
     repo: 'https://github.com/turtl/server.git'
     dest: /srv/turtl
-    # Latest version/revision as of 10JULY2020
-    version: b8d07d6a06d3690262a6bae2d89386f9c29b7fa9
+    # Latest commit as of 21FEB2022
+    version: 0e59ee0a47fc5937600999d14ceb1aca6392aec8
 
 - name: Install turtl packages
   become: yes
+  become_method: sudo
   become_user: turtl
+  become_flags: 'SHELL=/bin/sh'
   npm:
     path: /srv/turtl
     production: yes

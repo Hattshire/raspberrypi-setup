@@ -49,4 +49,5 @@
     name: dnsmasq
     state: restarted
     enabled: yes
+    # TODO Restart only if something changed
 

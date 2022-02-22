@@ -2,18 +2,20 @@
   apt:
     name:
       - nodejs
-      - yarnpkg
-      - python-cryptography
+      - python3-cryptography
     state: present
     update_cache: yes
+- name: Install a yarn
+  apt:
+    deb: https://github.com/yarnpkg/yarn/releases/download/v1.22.17/yarn_1.22.17_all.deb
 
 # TODO Find out why creating the user with `home=/srv/zenko/s3` does not respect `create_home: no` when there's no `/srv/zenko`.
 - name: Create zenko cloudserver service user
   user:
     name: zenko-s3
     shell: /usr/sbin/nologin
-    create_home: no
-    home: /srv/zenko-s3
+    create_home: yes
+    home: /var/zenko-s3
     system: yes
     state: present
 
@@ -31,14 +33,13 @@
   git:
     repo: 'https://github.com/scality/cloudserver.git'
     dest: /srv/zenko-s3
-    version: "8.2.6"
+    version: "8.3.1"
     update: no
 
 - name: Install zenko cloudserver packages
   become: yes
   become_user: zenko-s3
-  yarn:
-    executable: /usr/bin/yarnpkg
+  community.general.yarn:
     path: /srv/zenko-s3
     production: yes
 
